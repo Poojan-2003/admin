@@ -16,6 +16,7 @@ class SquareTile extends StatefulWidget {
   final String Month;
   final String Year;
   final String name;
+  final String FileLink;
   final Function()? onTap;
   
    SquareTile({
@@ -27,7 +28,8 @@ class SquareTile extends StatefulWidget {
   required this.Type_of_xerox,
   required this.Year,
     required this.name,
-    required this.onTap
+    required this.onTap,
+     required this.FileLink
 
   }) ;
 
@@ -185,7 +187,18 @@ class _SquareTileState extends State<SquareTile> {
     }
   }
 
-  @override
+ _launchUrl(String url) async{
+
+   var urlf= Uri.parse(url);
+   if(await canLaunchUrl(urlf)){
+     await launchUrl(urlf,mode: LaunchMode.externalApplication);
+   }else {
+     throw 'could not launch';
+   }
+ }
+
+
+ @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(20),
@@ -196,83 +209,61 @@ class _SquareTileState extends State<SquareTile> {
         borderRadius: BorderRadius.circular(5),
         color: Colors.grey[200]
       ),
-      child: FittedBox(
-        fit: BoxFit.fitWidth,
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Text("Serial No : "),
-                Text((sr++).toString()),
+      child: Column(
+        children: [
 
-              ],
-            ),
-            SizedBox(height: 15,),
-            Row(
-              children: [
-                Text("Name : "),
-                Text(widget.name),
-                SizedBox(width: 20,),
-                Text("ID : "),
-                Text(widget.ID),
+          SizedBox(height: 15,),
+          Row(
+            children: [
+              Text("Name : "),
+              Text(widget.name),
+              SizedBox(width: 20,),
+              Text("ID : "),
+              Text(widget.ID),
 
-              ],
-            ),
-            SizedBox(height: 15,),
-            Row(
-              children: [
-                Text("Type Of Zerox : "),
-                Text(widget.Type_of_xerox),
+            ],
+          ),
+          SizedBox(height: 15,),
+          Row(
+            children: [
+              Text("Type Of Zerox : "),
+              Text(widget.Type_of_xerox),
 
-              ],
-            ),
-            SizedBox(height: 15,),
-            Row(
-              children: [
-                Text("Date : "),
-                Text(widget.Day),
-                Text("-"),
-                Text(widget.Month),
-                Text("-"),
-                Text(widget.Year),
+            ],
+          ),
+          SizedBox(height: 15,),
+          Row(
+            children: [
+              Text("Date : "),
+              Text(widget.Day),
+              Text("-"),
+              Text(widget.Month),
+              Text("-"),
+              Text(widget.Year),
 
-              ],
-            ),
-            SizedBox(height: 15,),
-            Row(
-              children: [
-                Text("FileName : "),
-                Text(widget.filename),
+            ],
+          ),
+          SizedBox(height: 15,),
+          Row(
+            children: [
+              Text("FileName : "),
+              Text(widget.filename),
+            ],
+          ),SizedBox(
+            height: 5,
+          ),
+          Row(
+            children: [
+              TextButton.icon(
+                onPressed: widget.onTap,
+                label: Text("Download PDF",style: TextStyle(fontSize: 15),),
+                icon: Icon(Icons.download,size: 15,),
+              )
+            ],
+          ),
 
 
-              ],
-            ),SizedBox(
-              height: 15,
-            ),
-            // Row(
-            //   children: [
-            //     TextButton.icon(
-            //       onPressed: widget.onTap,
-            //       label: Text("Download PDF",style: TextStyle(fontSize: 20),),
-            //       icon: Icon(Icons.download,size: 25,),
-            //
-            //
-            //     )
-            //   ],
-            // ),
-            SizedBox(height: 15,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                GestureDetector(onTap: widget.onTap ,
-            child: Icon(Icons.check_sharp,size: 35,)),
-                SizedBox(width: 40,),
-                Icon(Icons.clear,size: 35,)
-              ],
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }

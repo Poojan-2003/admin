@@ -173,61 +173,81 @@ class _ViewAllDataState extends State<ViewAllData> {
     }
   }
 
+  double screenWidth= 0;
+  double screenHeigth = 0;
 
   @override
   Widget build(BuildContext context) {
-    
+    screenWidth = MediaQuery.of(context).size.width;
+    screenHeigth = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: Colors.grey[300],
 
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: [
-           StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('pdf').snapshots(),
-          builder: (context , AsyncSnapshot<QuerySnapshot> snapshot){
-            if(snapshot.hasData){
-              return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context,i){
-                    var data = snapshot.data!.docs[i];
-                    print(data['FileLink']);
-                    return Container(
+        backgroundColor: Colors.grey[300],
 
-                      child: SquareTile(
-                        filename: data['filename'],
-                        name: data['name'],
-                        ID: data['ID'],
-                        Type_of_xerox: data['Type_of_zerox'],
-                        Day: data['Day'],
-                        Month: data['Month'],
-                        Year:data['year'],
-                      //   onTap: () {
-                      //     //_launchUrl(data['FileLink']);
-                      //
-                      // },
-                          onTap:   ()async{
-                              print(data['token']);
-                              sendPushMessage(data['token']);
-                            }
+      body: StreamBuilder(
+      stream: FirebaseFirestore.instance.collection('pdf').snapshots(),
+      builder: (context , AsyncSnapshot<QuerySnapshot> snapshot){
+       if(snapshot.hasData){
+         return ListView.builder(
+             shrinkWrap: true,
+             itemCount: snapshot.data!.docs.length,
+             itemBuilder: (context,i){
+               var data = snapshot.data!.docs[i];
+
+               return SingleChildScrollView(
+                 child: Column(
+                   children: [
+                     SquareTile(
+                       filename: data['filename'],
+                       name: data['name'],
+                       ID: data['ID'],
+                       Type_of_xerox: data['Type_of_zerox'],
+                       Day: data['Day'],
+                       Month: data['Month'],
+                       Year:data['year'],
+                       FileLink: data['FileLink'],
+                       onTap: () {
+                         _launchUrl(data['FileLink']);
+
+                     },
+                            ),
+                     SizedBox(height: 5,),
+                     Row(
+                       mainAxisAlignment: MainAxisAlignment.center,
+                       crossAxisAlignment: CrossAxisAlignment.center,
+                       children: [
+                         GestureDetector(onTap:   ()async{
+                                   print(data['token']);
+                                 sendPushMessage(data['token']);
+                               },
+                             child: Icon(Icons.check_sharp,size: 35,)),
 
 
-                      ),
+                       ],
+                     ),
 
-                    );
-                  }
-              );
-            }
-                                  else return Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-          },
-        ),
-        ],
-    ),
-    ),
+                     Divider(
+                       thickness: 1,
+                       color: Colors.black,
+                       indent: 15,
+                       endIndent: 15,
+                     )
+                   ],
+                 ),
+               );
+             }
+         );
+       }
+                             else return Center(
+                               child: Row(
+                                 mainAxisAlignment: MainAxisAlignment.center,
+                                 crossAxisAlignment: CrossAxisAlignment.center,
+                                 children: [
+                                   Text("No Data Found",style: TextStyle(fontSize: 20),)
+                                 ],
+                               ),
+                             );
+      },
       ),
     );
 

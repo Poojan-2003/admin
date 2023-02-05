@@ -21,8 +21,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
 
         textTheme: Theme.of(context).textTheme.apply(
-          fontSizeFactor: 3,
-          fontSizeDelta: 2.0,
+          fontSizeFactor: 1.5,
+          // fontSizeDelta: 2.0,
           fontFamily: 'Times New Roman'
         ),
         primarySwatch: Colors.blue,
